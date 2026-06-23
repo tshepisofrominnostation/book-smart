@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book-Smart — Textbook Tracking for Every School</title>
+<meta name="description" content="Book-Smart helps township and local schools track textbooks, prevent losses, and recover costs — simply and affordably."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
+html{scroll-behavior:smooth;}
+body{background:#f8fafc;color:#1e293b;overflow-x:hidden;}
+
+/* ── TOKENS ─────────────────────────────────────── */
+:root{
+  --green:#16a34a;--green-d:#15803d;--green-l:#f0fdf4;--green-b:#bbf7d0;
+  --navy:#0f172a;--navy2:#1e293b;
+  --orange:#ea580c;--red:#dc2626;
+  --bg:#f8fafc;--white:#ffffff;
+  --border:#e2e8f0;--muted:#64748b;--subtle:#94a3b8;
+  --radius:14px;
+  --shadow:0 4px 24px rgba(0,0,0,.07);
+  --shadow-lg:0 12px 48px rgba(0,0,0,.12);
+}
+
+/* ── NAV ─────────────────────────────────────────── */
+#nav{position:fixed;top:0;width:100%;z-index:200;background:rgba(248,250,252,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
+#nav.up{box-shadow:0 2px 24px rgba(0,0,0,.08);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--green),var(--green-d));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(22,163,74,.3);flex-shrink:0;}
+.logo-mark span{color:#fff;font-weight:800;font-size:17px;}
+.logo-text{font-weight:800;font-size:19px;color:var(--navy);}
+.logo-text em{color:var(--green);font-style:normal;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{color:var(--muted);font-size:14px;font-weight:500;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--green);}
+.nav-cta{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-weight:700;font-size:14px;border-radius:10px;transition:all .2s;font-family:inherit;}
+.btn-ghost{background:none;color:var(--muted);padding:8px 14px;border:1.5px solid transparent;}
+.btn-ghost:hover{color:var(--navy);border-color:var(--border);}
+.btn-primary{background:var(--green);color:#fff;padding:11px 22px;box-shadow:0 4px 14px rgba(22,163,74,.3);}
+.btn-primary:hover{background:var(--green-d);transform:translateY(-1px);box-shadow:0 8px 24px rgba(22,163,74,.4);}
+.btn-primary:active{transform:translateY(0);}
+.btn-outline{background:#fff;color:var(--navy);padding:11px 22px;border:1.5px solid var(--border);}
+.btn-outline:hover{border-color:var(--green);color:var(--green);}
+.btn-lg{padding:15px 30px;font-size:15px;border-radius:12px;}
+.btn-white{background:#fff;color:var(--navy);padding:13px 26px;border-radius:12px;font-size:15px;}
+.btn-white:hover{background:#f0fdf4;color:var(--green);}
+.btn-ghost-white{background:transparent;color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.25);padding:13px 26px;border-radius:12px;font-size:15px;}
+.btn-ghost-white:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5);}
+#hamburger{background:none;border:none;cursor:pointer;padding:6px;display:none;}
+#mobileMenu{display:none;padding:16px 24px 20px;border-top:1px solid var(--border);background:#fff;}
+#mobileMenu a{display:block;padding:12px 0;color:var(--navy2);font-weight:500;text-decoration:none;border-bottom:1px solid #f1f5f9;}
+
+/* ── HERO ─────────────────────────────────────────── */
+.hero{background:linear-gradient(140deg,#0a1628 0%,#0f2d1a 55%,#134e35 100%);min-height:100vh;display:flex;align-items:center;padding-top:66px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+.hero-glow{position:absolute;top:20%;right:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(34,197,94,.1) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:1200px;margin:0 auto;padding:64px 24px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:99px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:#4ade80;font-size:12px;font-weight:600;margin-bottom:22px;}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse-dot 1.5s ease-in-out infinite;}
+h1{font-size:3.1rem;font-weight:800;color:#fff;line-height:1.1;margin-bottom:20px;}
+h1 em{color:#4ade80;font-style:normal;}
+.hero-sub{font-size:1.05rem;color:#94a3b8;line-height:1.75;margin-bottom:32px;max-width:480px;}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px;}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{font-size:12px;color:#475569;background:rgba(255,255,255,.06);padding:6px 13px;border-radius:99px;border:1px solid rgba(255,255,255,.1);}
+
+/* ── PHONE MOCKUP ─────────────────────────────────── */
+.phone-wrap{display:flex;justify-content:center;position:relative;}
+.phone{width:272px;background:#1e293b;border-radius:36px;border:4px solid #334155;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.55);animation:float 4s ease-in-out infinite;}
+.phone-sb{background:#0f172a;padding:9px 18px;display:flex;justify-content:space-between;align-items:center;}
+.phone-sb span{color:#64748b;font-size:11px;font-weight:600;}
+.phone-screen{background:#fff;}
+.phone-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:14px 16px 18px;}
+.phone-greeting{color:#64748b;font-size:11px;margin-bottom:2px;}
+.phone-name{color:#fff;font-weight:700;font-size:15px;}
+.phone-avatar{width:34px;height:34px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;}
+.phone-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
+.ps{background:rgba(255,255,255,.07);border-radius:10px;padding:10px;text-align:center;}
+.ps-val{color:#fff;font-weight:800;font-size:17px;}
+.ps-label{color:#64748b;font-size:10px;margin-top:2px;}
+.phone-body{padding:12px 14px 16px;}
+.scan-btn-phone{width:100%;background:linear-gradient(135deg,var(--green),var(--green-d));color:#fff;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;margin-bottom:10px;}
+.scan-btn-phone:active{transform:scale(.97);}
+.feed-label{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.fi{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:10px;font-size:12px;margin-bottom:5px;animation:slideIn .3s ease both;}
+.fi-ok{background:#f0fdf4;border:1px solid #bbf7d0;}
+.fi-err{background:#fef2f2;border:1px solid #fecaca;}
+.fi-warn{background:#fffbeb;border:1px solid #fde68a;}
+.fi-icon{font-size:12px;font-weight:700;flex-shrink:0;}
+.fi-name{font-weight:600;font-size:12px;}
+.fi-sub{font-size:11px;color:#64748b;}
+.fi-time{font-size:11px;color:#94a3b8;margin-left:auto;flex-shrink:0;}
+/* Floating chip */
+.float-chip{position:absolute;bottom:-10px;right:-36px;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 8px 32px rgba(0,0,0,.15);border:1px solid var(--border);min-width:160px;animation:float 3s ease-in-out infinite;}
+.float-chip-label{font-size:11px;color:var(--muted);font-weight:600;}
+.float-chip-val{font-size:14px;font-weight:800;color:var(--navy);margin-top:2px;}
+.float-chip-sub{font-size:11px;color:var(--subtle);margin-top:1px;}
+
+/* ── STATS STRIP ──────────────────────────────────── */
+.stats-strip{background:#fff;border-bottom:1px solid var(--border);padding:28px 24px;}
+.stats-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;}
+.stat-val{font-size:2rem;font-weight:800;color:var(--navy);}
+.stat-val.green{color:var(--green);}
+.stat-val.orange{color:var(--orange);}
+.stat-desc{font-size:13px;color:var(--muted);margin-top:4px;}
+.stat-div{border-left:1px solid #f1f5f9;}
+
+/* ── SECTION BASE ─────────────────────────────────── */
+section{padding:80px 24px;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-head{text-align:center;margin-bottom:52px;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:14px;}
+.badge-green{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;}
+.badge-blue{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+.badge-orange{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
+.badge-purple{background:#faf5ff;color:#7c3aed;border:1px solid #e9d5ff;}
+h2{font-size:2.1rem;font-weight:800;color:var(--navy);margin-bottom:14px;line-height:1.2;}
+.section-sub{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto;line-height:1.7;}
+
+/* ── CARDS ────────────────────────────────────────── */
+.card{background:#fff;border-radius:16px;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+
+/* ── PROBLEM ──────────────────────────────────────── */
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.prob-card{background:#fff;border-radius:16px;padding:28px;text-align:center;}
+.prob-icon{font-size:2.4rem;margin-bottom:12px;}
+.prob-stat{font-size:1.9rem;font-weight:800;margin-bottom:6px;}
+.prob-desc{font-size:14px;color:var(--muted);line-height:1.6;}
+
+/* ── HOW ──────────────────────────────────────────── */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.step{text-align:center;padding:8px;}
+.step-num{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-weight:800;font-size:20px;box-shadow:0 8px 24px rgba(22,163,74,.3);}
+.step-num.green{background:linear-gradient(135deg,var(--green),var(--green-d));color:#fff;}
+.step-num.dark{background:var(--navy);color:#4ade80;}
+.step h3{font-weight:700;font-size:15px;color:var(--navy);margin-bottom:8px;}
+.step p{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* ── SCANNER SECTION ──────────────────────────────── */
+.scanner-highlight{background:linear-gradient(135deg,#0f172a,#134e35);border-radius:24px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+.scanner-copy h2{color:#fff;margin-bottom:14px;}
+.scanner-copy p{color:#94a3b8;line-height:1.7;margin-bottom:24px;font-size:15px;}
+.scanner-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.scanner-list li{display:flex;align-items:flex-start;gap:10px;color:rgba(255,255,255,.85);font-size:14px;}
+.scanner-list li span{color:#4ade80;font-weight:700;margin-top:1px;flex-shrink:0;}
+.scanner-demo{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px;}
+.scanner-input-wrap{display:flex;gap:10px;margin-bottom:16px;}
+.scanner-input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 16px;color:#fff;font-size:14px;font-family:monospace;outline:none;transition:border-color .2s;}
+.scanner-input:focus{border-color:#4ade80;}
+.scanner-input::placeholder{color:#475569;}
+.scan-feed{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto;}
+.sfi{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;}
+.sfi-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);}
+.sfi-err{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);}
+.sfi-warn{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.2);}
+.sfi-bc{font-family:monospace;font-weight:700;font-size:12px;}
+.sfi-ok .sfi-bc{color:#4ade80;}
+.sfi-err .sfi-bc{color:#f87171;}
+.sfi-warn .sfi-bc{color:#fbbf24;}
+.sfi-info{flex:1;}
+.sfi-sub{font-size:11px;color:#64748b;margin-top:1px;}
+.sfi-time{font-size:11px;color:#475569;flex-shrink:0;}
+.scan-count{font-size:12px;color:#4ade80;font-weight:600;margin-bottom:10px;}
+.quick-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.qchip{font-size:12px;font-family:monospace;padding:5px 11px;border-radius:8px;cursor:pointer;font-weight:600;border:none;transition:opacity .2s;}
+.qchip:hover{opacity:.8;}
+.qchip-ok{background:rgba(34,197,94,.15);color:#4ade80;}
+.qchip-warn{background:rgba(234,179,8,.15);color:#fbbf24;}
+.qchip-err{background:rgba(220,38,38,.15);color:#f87171;}
+
+/* ── DEMO ─────────────────────────────────────────── */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.demo-card{padding:24px;border-radius:20px;}
+
+/* ── ROLES ────────────────────────────────────────── */
+.role-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;}
+.rtab{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s;}
+.rtab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.role-view{display:none;}
+.role-view.on{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+.role-title{font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:10px;}
+.role-desc{color:var(--muted);line-height:1.7;margin-bottom:20px;}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.check-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#475569;}
+.check-list li span{color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ── PRICING ──────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto;}
+.pcard{background:#fff;border-radius:20px;padding:30px;border:1.5px solid var(--border);transition:all .2s;}
+.pcard:hover{border-color:var(--green);box-shadow:0 12px 40px rgba(22,163,74,.1);}
+.pcard.featured{background:linear-gradient(135deg,#0f172a,#134e35);border:none;color:#fff;transform:scale(1.04);}
+.plan-name{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px;}
+.pcard.featured .plan-name{color:rgba(255,255,255,.6);}
+.plan-price{font-size:2.1rem;font-weight:800;color:var(--navy);margin-bottom:2px;}
+.pcard.featured .plan-price{color:#fff;}
+.plan-sub{font-size:12px;color:var(--subtle);margin-bottom:20px;}
+.pcard.featured .plan-sub{color:rgba(255,255,255,.45);}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.plan-features li{font-size:13px;display:flex;gap:8px;color:#475569;}
+.pcard.featured .plan-features li{color:rgba(255,255,255,.8);}
+.plan-features li span{flex-shrink:0;}
+.pop-badge{display:inline-block;background:#fbbf24;color:#1c1917;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+.pcard-btn-featured{width:100%;background:#fff;color:var(--navy);border:none;padding:13px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s;}
+.pcard-btn-featured:hover{opacity:.9;}
+
+/* ── TESTIMONIALS ─────────────────────────────────── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.tcard{padding:24px;}
+.stars{font-size:13px;color:#fbbf24;margin-bottom:12px;}
+.tquote{font-size:13px;color:#475569;line-height:1.7;margin-bottom:16px;}
+.tauthor{display:flex;align-items:center;gap:10px;}
+.tavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;}
+
+/* ── CONTACT ──────────────────────────────────────── */
+.contact-form{background:#fff;border-radius:20px;padding:32px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;max-width:560px;margin:0 auto;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;}
+.input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:11px 15px;font-size:14px;color:var(--navy);outline:none;transition:border-color .2s;font-family:inherit;}
+.input:focus{border-color:var(--green);background:#fff;}
+.input::placeholder{color:#cbd5e1;}
+select.input{cursor:pointer;}
+textarea.input{resize:none;}
+
+/* ── FOOTER ───────────────────────────────────────── */
+footer{background:#0f172a;color:#94a3b8;padding:52px 24px 24px;}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand p{font-size:13px;color:#475569;line-height:1.7;margin:14px 0 16px;max-width:240px;}
+.footer-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.fbadge{font-size:11px;background:rgba(255,255,255,.05);padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.08);}
+.footer-col-title{font-size:12px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;}
+.footer-link{display:block;font-size:13px;color:#475569;text-decoration:none;margin-bottom:10px;transition:color .2s;}
+.footer-link:hover{color:#4ade80;}
+.footer-bottom{max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.footer-bottom span{font-size:12px;}
+
+/* ── MODALS ───────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);backdrop-filter:blur(5px);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.modal{background:#fff;border-radius:24px;padding:32px;width:100%;max-width:440px;transform:translateY(20px);transition:transform .3s;max-height:90vh;overflow-y:auto;}
+.overlay.open .modal{transform:translateY(0);}
+.modal-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.modal-logo{width:42px;height:42px;background:linear-gradient(135deg,var(--green),var(--green-d));border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.modal-logo span{color:#fff;font-weight:800;font-size:17px;}
+.modal-divider{height:1px;background:var(--border);margin:18px 0;}
+.modal-form{display:flex;flex-direction:column;gap:12px;}
+
+/* ── TOAST ────────────────────────────────────────── */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--navy);color:#fff;padding:13px 20px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.3);transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;border-left:3px solid var(--green);pointer-events:none;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.error{border-color:var(--red);}
+
+/* ── AUDIT MODAL ──────────────────────────────────── */
+.audit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+.acard{border-radius:12px;padding:14px;text-align:center;}
+.acard-val{font-size:1.5rem;font-weight:800;}
+.acard-label{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ── ANIMATIONS ───────────────────────────────────── */
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes slideIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;}
+  .phone-wrap{display:none;}
+  .hero-sub{margin:0 auto 32px;}
+  .hero-actions{justify-content:center;}
+  .hero-pills{justify-content:center;}
+  .scanner-highlight{grid-template-columns:1fr;}
+  .role-view.on{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  h1{font-size:2.3rem;}
+  h2{font-size:1.7rem;}
+  .nav-links{display:none;}
+  .btn-ghost{display:none;}
+  #hamburger{display:block;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .stat-div{border-left:none;}
+  .steps-grid{grid-template-columns:1fr 1fr;}
+  .problem-grid{grid-template-columns:1fr;}
+  .demo-grid{grid-template-columns:1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .pcard.featured{transform:none;}
+  .testi-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  h1{font-size:2rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .steps-grid{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" href="#">
+      <div class="logo-mark"><span>B</span></div>
+      <span class="logo-text">Book<em>-Smart</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#scanner">Scanner</a>
+      <a href="#demo">Demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-ghost" onclick="showToast('Sign in coming soon — request your free trial below!')">Sign in</button>
+      <button class="btn btn-primary" onclick="openModal()">Get started free</button>
+      <button id="hamburger" onclick="toggleMenu()">
+        <svg width="22" height="22" fill="none" stroke="#64748b" stroke-width="2.2"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="12" x2="19" y2="12"/><line x1="3" y1="18" x2="19" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu">
+    <a href="#how" onclick="toggleMenu()">How it works</a>
+    <a href="#scanner" onclick="toggleMenu()">Scanner</a>
+    <a href="#demo" onclick="toggleMenu()">Demo</a>
+    <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+    <button class="btn btn-primary btn-lg" style="width:100%;margin-top:14px;" onclick="openModal();toggleMenu()">Get started free</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Built for South African township schools
+      </div>
+      <h1>Every book.<br/>Every learner.<br/><em>Accounted for.</em></h1>
+      <p class="hero-sub">Book-Smart gives each textbook a unique barcode tied to a learner's CEMIS number. Scan with your phone or USB scanner. Know who has what. Recover what's lost.</p>
+      <div class="hero-actions">
+        <button class="btn btn-white btn-lg" onclick="openModal()">
+          Start for free
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn btn-ghost-white btn-lg" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+          See the demo
+        </button>
+      </div>
+      <div class="hero-pills">
+        <span class="pill">🔒 POPIA compliant</span>
+        <span class="pill">📱 Works offline</span>
+        <span class="pill">🖨️ USB scanner ready</span>
+        <span class="pill">🏫 No IT skills needed</span>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="phone-wrap">
+      <div style="position:relative;">
+        <div class="phone">
+          <div class="phone-sb">
+            <span>9:41</span>
+            <div style="display:flex;gap:5px;align-items:center;">
+              <svg width="13" height="13" fill="#64748b" viewBox="0 0 24 24"><path d="M1.5 8.5c5.8-5.8 15.2-5.8 21 0M5 12c4-4 10-4 14 0M8.5 15.5c2.2-2.2 5.8-2.2 8 0M12 19h.01"/></svg>
+              <svg width="13" height="13" fill="#64748b" viewBox="0 0 24 24"><rect x="2" y="7" width="4" height="10" rx="1"/><rect x="9" y="4" width="4" height="13" rx="1"/><rect x="16" y="2" width="4" height="15" rx="1"/></svg>
+            </div>
+          </div>
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div><div class="phone-greeting">Welcome back</div><div class="phone-name">Ms. Dlamini 👋</div></div>
+                <div class="phone-avatar">ND</div>
+              </div>
+              <div class="phone-stats">
+                <div class="ps"><div class="ps-val">240</div><div class="ps-label">Books</div></div>
+                <div class="ps"><div class="ps-val" style="color:#4ade80;">211</div><div class="ps-label">Assigned</div></div>
+                <div class="ps"><div class="ps-val" style="color:#f87171;">7</div><div class="ps-label">Missing</div></div>
+              </div>
+            </div>
+            <div class="phone-body">
+              <button class="scan-btn-phone" onclick="phoneScan(this)">📷 Tap to Scan</button>
+              <div class="feed-label">Recent Scans</div>
+              <div id="phoneFeed">
+                <div class="fi fi-ok"><span class="fi-icon" style="color:#16a34a;">✓</span><div><div class="fi-name" style="color:#166534;">BK-0041</div><div class="fi-sub">Sipho M. · 8A</div></div><span class="fi-time">09:14</span></div>
+                <div class="fi fi-ok"><span class="fi-icon" style="color:#16a34a;">✓</span><div><div class="fi-name" style="color:#166534;">BK-0040</div><div class="fi-sub">Lerato S. · 8A</div></div><span class="fi-time">09:13</span></div>
+                <div class="fi fi-err"><span class="fi-icon" style="color:#dc2626;">✗</span><div><div class="fi-name" style="color:#991b1b;">BK-0039</div><div class="fi-sub">Already assigned</div></div><span class="fi-time">09:12</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="float-chip">
+          <div class="float-chip-label">💰 Bill generated</div>
+          <div class="float-chip-val">R245.00 due</div>
+          <div class="float-chip-sub">Sipho M. · damaged</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ STATS ═══════════════════════ -->
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div><div class="stat-val" id="s1">0</div><div class="stat-desc">Schools using Book-Smart</div></div>
+    <div class="stat-div"><div class="stat-val green" id="s2">0</div><div class="stat-desc">Books tracked nationwide</div></div>
+    <div class="stat-div"><div class="stat-val" id="s3">0%</div><div class="stat-desc">Average recovery rate</div></div>
+    <div class="stat-div"><div class="stat-val orange" id="s4">R0</div><div class="stat-desc">Saved per school per year</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PROBLEM ═══════════════════════ -->
+<section style="background:#f8fafc;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-orange">The problem we solve</div>
+      <h2>Township schools lose millions in books every year</h2>
+      <p class="section-sub">With no tracking system, books disappear at year-end and schools have no way to prove who had what. Book-Smart changes that.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="prob-card" style="border:1px solid #fecaca;">
+        <div class="prob-icon">📚</div>
+        <div class="prob-stat" style="color:#dc2626;">1 in 3</div>
+        <div class="prob-desc">Books issued at the start of the year are never returned — no receipt, no proof</div>
+      </div>
+      <div class="prob-card" style="border:1px solid #fde68a;">
+        <div class="prob-icon">📝</div>
+        <div class="prob-stat" style="color:#d97706;">Zero proof</div>
+        <div class="prob-desc">No paper trail means schools can't legally bill students for lost or damaged books</div>
+      </div>
+      <div class="prob-card" style="border:1px solid #bbf7d0;">
+        <div class="prob-icon">✅</div>
+        <div class="prob-stat" style="color:#16a34a;">Fixed</div>
+        <div class="prob-desc">Every scan is a digital receipt. Every loss becomes a recoverable, provable claim</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ HOW IT WORKS ═══════════════════════ -->
+<section id="how" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-green">How Book-Smart works</div>
+      <h2>Set up in a morning. Run it all year.</h2>
+      <p class="section-sub">No IT department needed. If you can use WhatsApp, you can use Book-Smart.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num green">1</div>
+        <h3>Add your school</h3>
+        <p>Sign up, add grades and classes. Import all learners from Excel in minutes — CEMIS numbers included.</p>
+      </div>
+      <div class="step">
+        <div class="step-num green">2</div>
+        <h3>Label your books</h3>
+        <p>Print unique barcodes straight from the dashboard. Stick them on every textbook. No special hardware needed.</p>
+      </div>
+      <div class="step">
+        <div class="step-num green">3</div>
+        <h3>Scan to assign</h3>
+        <p>Use any smartphone camera or a USB plug-and-play barcode scanner. Assign 40 books in under 8 minutes.</p>
+      </div>
+      <div class="step">
+        <div class="step-num dark">4</div>
+        <h3>Recover losses</h3>
+        <p>Run year-end audits automatically. Missing books trigger WhatsApp and SMS billing notices to parents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ SCANNER SECTION ═══════════════════════ -->
+<section id="scanner" style="background:#f8fafc;">
+  <div class="section-inner">
+    <div class="scanner-highlight">
+      <div class="scanner-copy">
+        <div class="badge" style="background:rgba(74,222,128,.12);color:#4ade80;border-color:rgba(74,222,128,.25);margin-bottom:16px;">Hardware scanner support</div>
+        <h2>Works with any barcode scanner</h2>
+        <p>Plug in any USB barcode scanner — the kind sold at Makro or game stores for under R200 — and Book-Smart instantly recognises it. No drivers, no setup, just plug and scan.</p>
+        <ul class="scanner-list">
+          <li><span>✓</span> USB plug-and-play scanners (HID keyboard mode)</li>
+          <li><span>✓</span> Bluetooth wireless scanners</li>
+          <li><span>✓</span> Smartphone camera scanning (built-in)</li>
+          <li><span>✓</span> Sound + visual feedback on every scan</li>
+          <li><span>✓</span> Instant duplicate and conflict detection</li>
+          <li><span>✓</span> Works offline — syncs when back online</li>
+        </ul>
+      </div>
+      <div class="scanner-demo">
+        <div style="color:rgba(255,255,255,.9);font-weight:700;font-size:15px;margin-bottom:4px;">📡 Live Scanner Session</div>
+        <div style="color:#64748b;font-size:12px;margin-bottom:14px;">Grade 8A · Ms. Dlamini · Mathematics</div>
+        <!-- Current learner -->
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Assigning to:</div>
+          <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div id="sAvatar" style="width:34px;height:34px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;">SM</div>
+              <div>
+                <div id="sName" style="color:#fff;font-weight:600;font-size:13px;">Sipho Mokoena</div>
+                <div id="sCemis" style="color:#64748b;font-size:11px;">CEMIS: C20240042 · Gr 8A</div>
+              </div>
+            </div>
+            <button onclick="nextSLearner()" style="font-size:11px;color:#4ade80;font-weight:600;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);padding:5px 10px;border-radius:7px;cursor:pointer;">Next →</button>
+          </div>
+        </div>
+        <!-- Scan input -->
+        <div class="scan-count" id="scanCount">0 books scanned this session</div>
+        <div class="quick-chips">
+          <button class="qchip qchip-ok" onclick="doQuickScan('BK-00043','ok')">BK-00043 ✓</button>
+          <button class="qchip qchip-ok" onclick="doQuickScan('BK-00044','ok')">BK-00044 ✓</button>
+          <button class="qchip qchip-warn" onclick="doQuickScan('BK-00041','dupe')">BK-00041 ⚠</button>
+          <button class="qchip qchip-err" onclick="doQuickScan('BK-00039','conflict')">BK-00039 ✗</button>
+        </div>
+        <div class="scanner-input-wrap">
+          <input id="scanInput" class="scanner-input" placeholder="Type barcode or use USB scanner…" autocomplete="off" onkeydown="if(event.key==='Enter'){doScan();}" />
+          <button class="btn btn-primary" onclick="doScan()" style="padding:12px 18px;font-size:14px;border-radius:10px;white-space:nowrap;">Scan</button>
+        </div>
+        <div class="scan-feed" id="scanFeed">
+          <div style="text-align:center;font-size:13px;color:#475569;padding:20px;">No scans yet — click a chip or type a barcode above!</div>
+        </div>
+        <button id="assignBtn" onclick="assignAll()" disabled style="margin-top:12px;width:100%;background:var(--green);color:#fff;border:none;padding:13px;border-radius:11px;font-weight:700;font-size:13px;cursor:pointer;opacity:.4;transition:opacity .2s;">
+          ✓ Assign all to this learner
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ DEMO ═══════════════════════ -->
+<section id="demo" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-blue">Interactive demo</div>
+      <h2>Try the full dashboard</h2>
+      <p class="section-sub">Click through each view — exactly what your staff sees every day.</p>
+    </div>
+    <div class="demo-grid">
+      <!-- School overview -->
+      <div class="card demo-card">
+        <div style="font-weight:700;font-size:15px;color:var(--navy);margin-bottom:16px;">📊 Realvue Primary School</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+          <div style="background:#f8fafc;border-radius:12px;padding:14px;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--navy);">480</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Total books</div>
+            <div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:2px;"><div style="height:4px;background:var(--green);border-radius:2px;width:87%;"></div></div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:12px;padding:14px;border:1px solid #bbf7d0;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--green);">94%</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Recovery rate</div>
+            <div style="margin-top:8px;height:4px;background:#bbf7d0;border-radius:2px;"><div style="height:4px;background:var(--green);border-radius:2px;width:94%;"></div></div>
+          </div>
+          <div style="background:#fef2f2;border-radius:12px;padding:14px;border:1px solid #fecaca;">
+            <div style="font-size:1.5rem;font-weight:800;color:#dc2626;">18</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Missing books</div>
+          </div>
+          <div style="background:#fff7ed;border-radius:12px;padding:14px;border:1px solid #fed7aa;">
+            <div style="font-size:1.5rem;font-weight:800;color:#ea580c;">R4,200</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Outstanding</div>
+          </div>
+        </div>
+        <button onclick="runAudit()" style="width:100%;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;padding:13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='#cbd5e1';this.style.color='var(--muted)'">
+          📋 Run school-wide audit →
+        </button>
+      </div>
+
+      <!-- Custody chain -->
+      <div class="card demo-card">
+        <div style="font-weight:700;font-size:15px;color:var(--navy);margin-bottom:16px;">🔗 Custody Chain — BK-00041</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#f8fafc;border-radius:10px;">
+            <div style="width:32px;height:32px;background:#e0f2fe;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📦</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--navy);">Storeroom</div><div style="font-size:11px;color:var(--subtle);">Jan 15, 2026</div></div>
+            <span class="badge badge-green" style="font-size:10px;padding:3px 8px;">Start</span>
+          </div>
+          <div style="margin-left:16px;width:1px;height:10px;background:var(--border);"></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#f8fafc;border-radius:10px;">
+            <div style="width:32px;height:32px;background:#faf5ff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👩‍💼</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--navy);">Mr. Sibiya (HoD)</div><div style="font-size:11px;color:var(--subtle);">Jan 16, 2026</div></div>
+            <span class="badge badge-purple" style="font-size:10px;padding:3px 8px;">Issued ✓</span>
+          </div>
+          <div style="margin-left:16px;width:1px;height:10px;background:var(--border);"></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;">
+            <div style="width:32px;height:32px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👩‍🏫</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--navy);">Ms. Dlamini (Teacher)</div><div style="font-size:11px;color:var(--subtle);">Jan 17, 2026</div></div>
+            <span class="badge badge-green" style="font-size:10px;padding:3px 8px;">Active ✓</span>
+          </div>
+          <div style="margin-left:16px;width:1px;height:10px;background:var(--border);"></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fffbeb;border-radius:10px;border:1px solid #fde68a;">
+            <div style="width:32px;height:32px;background:#fef9c3;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🧑‍🎓</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--navy);">Sipho Mokoena</div><div style="font-size:11px;color:var(--subtle);">CEMIS: C20240042 · Grade 8A</div></div>
+            <span class="badge badge-orange" style="font-size:10px;padding:3px 8px;">Current</span>
+          </div>
+        </div>
+        <button onclick="sendWADemo()" style="margin-top:14px;width:100%;background:#25D366;color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:13px;cursor:pointer;transition:opacity .2s;" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+          📱 Send WhatsApp billing notice →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ ROLES ═══════════════════════ -->
+<section style="background:#f8fafc;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-purple">Built for every role</div>
+      <h2>One platform, every stakeholder</h2>
+    </div>
+    <div class="role-tabs">
+      <button class="rtab active" id="rt-principal" onclick="showRole('principal')">Principal</button>
+      <button class="rtab" id="rt-hod" onclick="showRole('hod')">Head of Dept</button>
+      <button class="rtab" id="rt-teacher" onclick="showRole('teacher')">Teacher</button>
+      <button class="rtab" id="rt-parent" onclick="showRole('parent')">Parent</button>
+    </div>
+
+    <div id="rv-principal" class="role-view on">
+      <div>
+        <div class="role-title">Principal / Deputy Principal</div>
+        <p class="role-desc">Full school oversight. See the financial impact of book loss, trigger audits, approve billing claims and generate reports for the district.</p>
+        <ul class="check-list">
+          <li><span>✓</span>School-wide inventory dashboard</li>
+          <li><span>✓</span>Financial loss & recovery reports</li>
+          <li><span>✓</span>Trigger mid-year and year-end audits</li>
+          <li><span>✓</span>Approve or waive billing claims</li>
+          <li><span>✓</span>Export PDF reports for DBE / district</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">Financial Summary · Term 1 2026</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:#f8fafc;border-radius:10px;padding:14px;"><div style="font-size:1.4rem;font-weight:800;color:var(--navy);">R84,000</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Total book value</div></div>
+          <div style="background:#fef2f2;border-radius:10px;padding:14px;border:1px solid #fecaca;"><div style="font-size:1.4rem;font-weight:800;color:#dc2626;">R12,400</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Outstanding claims</div></div>
+          <div style="background:#f0fdf4;border-radius:10px;padding:14px;border:1px solid #bbf7d0;grid-column:span 2;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:12px;color:var(--muted);">Recovery rate this year</div><div style="font-size:1.5rem;font-weight:800;color:var(--green);">91.4%</div></div><div style="font-size:2rem;">📈</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="rv-hod" class="role-view">
+      <div>
+        <div class="role-title">Head of Department</div>
+        <p class="role-desc">Know exactly which teachers hold which books. No more "I never received those" — every handoff is digitally confirmed with timestamp and signature.</p>
+        <ul class="check-list">
+          <li><span>✓</span>Teacher accountability view per subject</li>
+          <li><span>✓</span>Digitally accept custody from storeroom</li>
+          <li><span>✓</span>Issue book sets to multiple teachers at once</li>
+          <li><span>✓</span>Flag unacknowledged transfers</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">Mathematics Dept · 2026</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-radius:10px;padding:12px 14px;">
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;">ND</div><span style="font-size:13px;font-weight:600;">Ms. N. Dlamini</span></div>
+            <div style="display:flex;gap:8px;align-items:center;"><span style="font-size:12px;color:var(--muted);">42 books</span><span class="badge badge-green" style="font-size:10px;padding:3px 8px;">Confirmed ✓</span></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-radius:10px;padding:12px 14px;">
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;background:#7c3aed;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;">BM</div><span style="font-size:13px;font-weight:600;">Mr. B. Mthembu</span></div>
+            <div style="display:flex;gap:8px;align-items:center;"><span style="font-size:12px;color:var(--muted);">38 books</span><span class="badge badge-orange" style="font-size:10px;padding:3px 8px;">Pending ⏳</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="rv-teacher" class="role-view">
+      <div>
+        <div class="role-title">Teacher</div>
+        <p class="role-desc">The fastest way to get 40 books into 40 learners' hands with full accountability. Works on any Android or iPhone — no app installation required.</p>
+        <ul class="check-list">
+          <li><span>✓</span>Scan books to learners in seconds</li>
+          <li><span>✓</span>Class roster with live book status</li>
+          <li><span>✓</span>Flag damaged books on return</li>
+          <li><span>✓</span>Works offline — syncs when online</li>
+          <li><span>✓</span>USB scanner plug-and-play</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">Class 8A · 40 Learners</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">
+          <div style="background:#f0fdf4;border-radius:10px;padding:12px;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1.4rem;font-weight:800;color:var(--green);">36</div><div style="font-size:11px;color:var(--muted);">Issued</div></div>
+          <div style="background:#fffbeb;border-radius:10px;padding:12px;text-align:center;border:1px solid #fde68a;"><div style="font-size:1.4rem;font-weight:800;color:#d97706;">3</div><div style="font-size:11px;color:var(--muted);">Pending</div></div>
+          <div style="background:#fef2f2;border-radius:10px;padding:12px;text-align:center;border:1px solid #fecaca;"><div style="font-size:1.4rem;font-weight:800;color:#dc2626;">1</div><div style="font-size:11px;color:var(--muted);">Missing</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f0fdf4;border-radius:8px;font-size:12px;"><span style="font-weight:500;">Sipho Mokoena</span><span style="color:var(--green);font-weight:600;">✓ BK-00041</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#f8fafc;border-radius:8px;font-size:12px;"><span style="font-weight:500;">Lerato Sithole</span><span style="color:var(--green);font-weight:600;">✓ BK-00042</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;background:#fffbeb;border-radius:8px;font-size:12px;border:1px solid #fde68a;"><span style="font-weight:500;">Bongani K.</span><span style="color:#d97706;font-weight:600;">⏳ Not yet</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="rv-parent" class="role-view">
+      <div>
+        <div class="role-title">Parent / Guardian</div>
+        <p class="role-desc">See exactly which books your child holds. Get notified by WhatsApp when books are issued or returned. No surprises at year-end billing.</p>
+        <ul class="check-list">
+          <li><span>✓</span>View all books your child currently holds</li>
+          <li><span>✓</span>WhatsApp & SMS billing notices</li>
+          <li><span>✓</span>Acknowledge or dispute claims</li>
+          <li><span>✓</span>No app install — works in any browser</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">My child: Sipho M. · Gr 8A</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:center;background:#f0fdf4;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;">
+            <span style="font-size:20px;flex-shrink:0;">📚</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Platinum Maths Gr8</div><div style="font-size:11px;color:var(--muted);">Issued: 2 Feb · Condition: Good</div></div>
+            <span class="badge badge-green" style="font-size:10px;padding:3px 8px;">Active</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;background:#fef2f2;border-radius:10px;padding:12px 14px;border:1px solid #fecaca;">
+            <span style="font-size:20px;flex-shrink:0;">⚠️</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">English FAL Gr8</div><div style="font-size:11px;color:#dc2626;">Returned damaged · R189.00 due</div></div>
+            <button onclick="showToast('📱 Payment details sent via WhatsApp!')" style="font-size:11px;background:#dc2626;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Pay now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PRICING ═══════════════════════ -->
+<section id="pricing" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-green">Simple pricing</div>
+      <h2>Affordable for every school</h2>
+      <p class="section-sub">Flat annual fee per school. No per-user charges. No hidden costs. Cancel anytime.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pcard">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">R1,999<span style="font-size:1rem;font-weight:400;color:var(--subtle);">/yr</span></div>
+        <div class="plan-sub">Up to 500 learners</div>
+        <ul class="plan-features">
+          <li><span style="color:var(--green);">✓</span>Unlimited books & barcodes</li>
+          <li><span style="color:var(--green);">✓</span>5 staff accounts</li>
+          <li><span style="color:var(--green);">✓</span>Mobile & USB scanning</li>
+          <li><span style="color:var(--green);">✓</span>Basic reports</li>
+          <li><span style="color:#cbd5e1;">—</span><span style="color:#94a3b8;">Billing module</span></li>
+          <li><span style="color:#cbd5e1;">—</span><span style="color:#94a3b8;">Year-end audit</span></li>
+        </ul>
+        <button class="btn btn-outline" style="width:100%;" onclick="openModal()">Get started</button>
+      </div>
+      <div class="pcard featured">
+        <div class="pop-badge">Most popular</div>
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">R4,999<span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,.4);">/yr</span></div>
+        <div class="plan-sub">Up to 1,500 learners</div>
+        <ul class="plan-features">
+          <li><span style="color:#4ade80;">✓</span>Everything in Starter</li>
+          <li><span style="color:#4ade80;">✓</span>Unlimited staff accounts</li>
+          <li><span style="color:#4ade80;">✓</span>Full billing & recovery module</li>
+          <li><span style="color:#4ade80;">✓</span>Year-end audit tools</li>
+          <li><span style="color:#4ade80;">✓</span>Bulk Excel import</li>
+          <li><span style="color:#4ade80;">✓</span>WhatsApp parent notices</li>
+        </ul>
+        <button class="btn pcard-btn-featured" onclick="openModal()">Start free trial</button>
+      </div>
+      <div class="pcard">
+        <div class="plan-name">District</div>
+        <div class="plan-price" style="font-size:1.7rem;">Custom</div>
+        <div class="plan-sub">10+ schools / Dept of Ed</div>
+        <ul class="plan-features">
+          <li><span style="color:var(--green);">✓</span>Everything in Pro</li>
+          <li><span style="color:var(--green);">✓</span>District-wide dashboard</li>
+          <li><span style="color:var(--green);">✓</span>Government API sync (DBE)</li>
+          <li><span style="color:var(--green);">✓</span>Dedicated support & training</li>
+          <li><span style="color:var(--green);">✓</span>WCED/DBE report formats</li>
+          <li><span style="color:var(--green);">✓</span>On-site onboarding</li>
+        </ul>
+        <button class="btn btn-outline" style="width:100%;" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+<section style="background:#f8fafc;">
+  <div class="section-inner">
+    <div class="section-head">
+      <h2>What educators are saying</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="card tcard">
+        <div class="stars">★★★★★</div>
+        <p class="tquote">"We recovered 96% of books at year-end for the first time ever. The billing feature alone paid for the subscription three times over."</p>
+        <div class="tauthor">
+          <div class="tavatar" style="background:var(--green);">NM</div>
+          <div><div style="font-size:13px;font-weight:600;">Mrs. N. Molefe</div><div style="font-size:11px;color:var(--muted);">Deputy Principal · Soweto</div></div>
+        </div>
+      </div>
+      <div class="card tcard">
+        <div class="stars">★★★★★</div>
+        <p class="tquote">"So simple. I issued 40 books in 6 minutes with my old Samsung phone. No learner can claim they never received their book anymore."</p>
+        <div class="tauthor">
+          <div class="tavatar" style="background:#7c3aed;">TK</div>
+          <div><div style="font-size:13px;font-weight:600;">Mr. T. Khumalo</div><div style="font-size:11px;color:var(--muted);">Maths Teacher · Khayelitsha</div></div>
+        </div>
+      </div>
+      <div class="card tcard">
+        <div class="stars">★★★★★</div>
+        <p class="tquote">"Setup took one morning. Imported 800 learners from Excel without a single error. The whole staff was trained by lunch."</p>
+        <div class="tauthor">
+          <div class="tavatar" style="background:var(--orange);">SB</div>
+          <div><div style="font-size:13px;font-weight:600;">Ms. S. Botha</div><div style="font-size:11px;color:var(--muted);">Admin Clerk · Durban</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section id="contact" style="background:#fff;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="badge badge-green">Get started today</div>
+      <h2>Request your free trial</h2>
+      <p class="section-sub">30 days free. No credit card needed. We'll help set up your school personally.</p>
+    </div>
+    <form class="contact-form" id="contactForm" onsubmit="submitLead(event)">
+      <div class="form-row">
+        <div class="field"><label>Your full name *</label><input class="input" type="text" name="name" placeholder="e.g. Nomsa Dlamini" required/></div>
+        <div class="field"><label>Phone number *</label><input class="input" type="tel" name="phone" placeholder="+27 XX XXX XXXX" required/></div>
+      </div>
+      <div class="field"><label>School name *</label><input class="input" type="text" name="school_name" placeholder="e.g. Realvue Primary School" required/></div>
+      <div class="field"><label>School email *</label><input class="input" type="email" name="email" placeholder="admin@school.co.za" required/></div>
+      <div class="form-row">
+        <div class="field">
+          <label>Province</label>
+          <select class="input" name="province">
+            <option value="">Select province…</option>
+            <option>Western Cape</option><option>Gauteng</option><option>KwaZulu-Natal</option>
+            <option>Eastern Cape</option><option>Limpopo</option><option>Mpumalanga</option>
+            <option>North West</option><option>Free State</option><option>Northern Cape</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Number of learners</label>
+          <select class="input" name="learner_count">
+            <option value="">Select…</option>
+            <option>Under 200</option><option>200–500</option>
+            <option>500–1,000</option><option>1,000–1,500</option><option>1,500+</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Tell us your biggest challenge</label><textarea class="input" name="message" rows="3" placeholder="e.g. We lose books every year and can't prove who had them…"></textarea></div>
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">
+        Request free trial →
+      </button>
+      <p style="text-align:center;font-size:12px;color:var(--muted);">We'll contact you within 24 hours to set up your school.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="logo" href="#"><div class="logo-mark"><span>B</span></div><span class="logo-text" style="color:#fff;">Book<em>-Smart</em></span></a>
+      <p>Simple textbook tracking built for township and local schools across South Africa.</p>
+      <div class="footer-badges">
+        <span class="fbadge">🔒 POPIA Compliant</span>
+        <span class="fbadge">🏦 DBE Compatible</span>
+        <span class="fbadge">🌍 AWS af-south-1</span>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <a href="#how" class="footer-link">How it works</a>
+      <a href="#scanner" class="footer-link">Scanner support</a>
+      <a href="#demo" class="footer-link">Demo</a>
+      <a href="#pricing" class="footer-link">Pricing</a>
+      <a href="#" onclick="showToast('API docs coming soon!')" class="footer-link">API docs</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <a href="#contact" class="footer-link">Contact</a>
+      <a href="#" onclick="showToast('Coming soon!')" class="footer-link">About us</a>
+      <a href="#" onclick="showToast('Coming soon!')" class="footer-link">Privacy policy</a>
+      <a href="#" onclick="showToast('Coming soon!')" class="footer-link">Terms of use</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <span class="footer-link">📧 hello@book-smart.co.za</span>
+      <span class="footer-link">📞 +27 21 000 0000</span>
+      <span class="footer-link">📍 Cape Town, SA</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span style="color:#334155;">© 2026 Book-Smart (Pty) Ltd. All rights reserved.</span>
+    <span style="color:#1e293b;">Built with ❤️ for SA educators</span>
+  </div>
+</footer>
+
+<!-- ═══════════════════════ SIGN-UP MODAL ═══════════════════════ -->
+<div class="overlay" id="signupOverlay" onclick="maybeCloseModal(event,'signupOverlay')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-logo"><span>B</span></div>
+      <div><div style="font-weight:800;font-size:18px;color:var(--navy);">Start with Book-Smart</div><div style="font-size:12px;color:var(--muted);">30 days free · No credit card needed</div></div>
+    </div>
+    <div class="modal-divider"></div>
+    <form class="modal-form" onsubmit="submitSignup(event)">
+      <div class="field"><label>Full name</label><input class="input" type="text" name="name" placeholder="Your name" required/></div>
+      <div class="field"><label>School email</label><input class="input" type="email" name="email" placeholder="admin@school.co.za" required/></div>
+      <div class="field"><label>School name</label><input class="input" type="text" name="school" placeholder="e.g. Realvue Primary" required/></div>
+      <div class="field"><label>Create password</label><input class="input" type="password" name="password" placeholder="Min 8 characters" required/></div>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">Create my free account →</button>
+    </form>
+    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:14px;">Already have an account? <button onclick="showToast('Login coming soon!')" style="color:var(--green);font-weight:600;background:none;border:none;cursor:pointer;font-size:12px;">Sign in</button></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ AUDIT MODAL ═══════════════════════ -->
+<div class="overlay" id="auditOverlay" onclick="maybeCloseModal(event,'auditOverlay')">
+  <div class="modal">
+    <div style="font-weight:800;font-size:18px;color:var(--navy);margin-bottom:4px;">📋 School Audit — Realvue Primary</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Scanning all 480 books against expected inventory…</div>
+    <div id="auditProg">
+      <div style="height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden;margin-bottom:10px;">
+        <div id="auditBar" style="height:8px;background:linear-gradient(90deg,var(--green),#4ade80);border-radius:99px;width:0%;transition:width .5s ease;"></div>
+      </div>
+      <div id="auditMsg" style="font-size:13px;color:var(--muted);">Starting audit…</div>
+    </div>
+    <div id="auditResult" style="display:none;">
+      <div class="audit-grid">
+        <div class="acard" style="background:#f0fdf4;border:1px solid #bbf7d0;"><div class="acard-val" style="color:var(--green);">451</div><div class="acard-label">Accounted for</div></div>
+        <div class="acard" style="background:#fef2f2;border:1px solid #fecaca;"><div class="acard-val" style="color:#dc2626;">29</div><div class="acard-label">Missing</div></div>
+        <div class="acard" style="background:#fffbeb;border:1px solid #fde68a;"><div class="acard-val" style="color:#d97706;">8</div><div class="acard-label">Condition changes</div></div>
+        <div class="acard" style="background:#fff7ed;border:1px solid #fed7aa;"><div class="acard-val" style="color:#ea580c;">R6,960</div><div class="acard-label">Estimated loss</div></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="showToast('📄 PDF report downloaded!');closeOverlay('auditOverlay')" class="btn btn-primary" style="flex:1;padding:13px;font-size:13px;">📄 Export PDF</button>
+        <button onclick="showToast('💬 WhatsApp notices sent to 29 parents!');closeOverlay('auditOverlay')" style="flex:1;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:12px;padding:13px;font-weight:700;font-size:13px;cursor:pointer;">💰 Raise claims</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOAST ═══════════════════════ -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+<script>
+// ── Config ─────────────────────────────────────────────────
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8888' : '';
+const SUPABASE_URL = 'https://cbllyweteqbfrkjdkeor.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNibGx5d2V0ZXFiZnJramRrZW9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNDQyNTYsImV4cCI6MjA2NTgyMDI1Nn0.2OOtXJoGj2YLsWsLLOBzJ5B0S0VYuaHILiCHlR6u0HE';
+
+// ── Nav scroll ──────────────────────────────────────────────
+window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('up', scrollY > 8));
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.style.display = m.style.display === 'block' ? 'none' : 'block';
+}
+
+// ── Toast ───────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 4000);
+}
+
+// ── Stat counters ───────────────────────────────────────────
+function animCount(id, target, prefix = '', suffix = '') {
+  const el = document.getElementById(id);
+  let c = 0, step = Math.ceil(target / 50);
+  const t = setInterval(() => {
+    c = Math.min(c + step, target);
+    el.textContent = prefix + c.toLocaleString() + suffix;
+    if (c >= target) clearInterval(t);
+  }, 28);
+}
+const statsObs = new IntersectionObserver(e => {
+  if (e[0].isIntersecting) {
+    animCount('s1', 52);
+    animCount('s2', 63800);
+    animCount('s3', 94, '', '%');
+    animCount('s4', 8400, 'R');
+    statsObs.disconnect();
+  }
+}, { threshold: 0.3 });
+statsObs.observe(document.querySelector('.stats-grid'));
+
+// ── Modals ──────────────────────────────────────────────────
+function openModal() { document.getElementById('signupOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+function maybeCloseModal(e, id) { if (e.target.classList.contains('overlay')) closeOverlay(id); }
+
+// ── Sign-up submit ──────────────────────────────────────────
+function submitSignup(e) {
+  e.preventDefault();
+  closeOverlay('signupOverlay');
+  showToast('🎉 Welcome! Check your email to confirm your account.');
+}
+
+// ── Lead form submit (real backend) ────────────────────────
+async function submitLead(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const form = document.getElementById('contactForm');
+  const data = Object.fromEntries(new FormData(form));
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API_BASE}/.netlify/functions/submit-lead`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (json.success) {
+      form.reset();
+      showToast('✅ Received! We\'ll call you within 24 hours to get your school set up.');
+    } else { throw new Error(json.error || 'Unknown error'); }
+  } catch (err) {
+    // Fallback: save directly to Supabase via anon key
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      form.reset();
+      showToast('✅ Received! We\'ll be in touch within 24 hours.');
+    } catch {
+      showToast('Something went wrong — please call us directly on +27 21 000 0000', 'error');
+    }
+  }
+
+  btn.textContent = 'Request free trial →';
+  btn.disabled = false;
+}
+
+// ── Role tabs ───────────────────────────────────────────────
+const roles = ['principal', 'hod', 'teacher', 'parent'];
+function showRole(role) {
+  roles.forEach(r => {
+    document.getElementById('rv-' + r).classList.toggle('on', r === role);
+    document.getElementById('rt-' + r).classList.toggle('active', r === role);
+  });
+}
+
+// ── Scanner demo ────────────────────────────────────────────
+const sLearners = [
+  { name: 'Sipho Mokoena',   initials: 'SM', cemis: 'C20240042', cls: 'Gr 8A', color: '#16a34a' },
+  { name: 'Lerato Sithole',  initials: 'LS', cemis: 'C20240043', cls: 'Gr 8A', color: '#7c3aed' },
+  { name: 'Amahle Zulu',     initials: 'AZ', cemis: 'C20240044', cls: 'Gr 8B', color: '#ea580c' },
+  { name: 'Bongani Khumalo', initials: 'BK', cemis: 'C20240045', cls: 'Gr 8A', color: '#0891b2' },
+];
+let sli = 0, scanned = new Set(), takenBarcodes = new Set(['BK-00039', 'BK-00099']);
+let scanCount = 0;
+
+function nextSLearner() {
+  sli = (sli + 1) % sLearners.length;
+  const l = sLearners[sli];
+  document.getElementById('sAvatar').textContent = l.initials;
+  document.getElementById('sAvatar').style.background = l.color;
+  document.getElementById('sName').textContent = l.name;
+  document.getElementById('sCemis').textContent = 'CEMIS: ' + l.cemis + ' · ' + l.cls;
+  scanned.clear();
+  updateScanCount();
+  showToast('Switched to ' + l.name);
+}
+
+function updateScanCount() {
+  document.getElementById('scanCount').textContent = scanned.size + ' book' + (scanned.size !== 1 ? 's' : '') + ' scanned this session';
+  const btn = document.getElementById('assignBtn');
+  btn.disabled = scanned.size === 0;
+  btn.style.opacity = scanned.size > 0 ? '1' : '0.4';
+}
+
+function doQuickScan(bc, type) {
+  if (type === 'dupe') scanned.add(bc);
+  document.getElementById('scanInput').value = bc;
+  doScan();
+}
+
+function doScan() {
+  const inp = document.getElementById('scanInput');
+  const bc = inp.value.trim().toUpperCase();
+  if (!bc) { showToast('Enter a barcode first'); return; }
+  const l = sLearners[sli];
+  let cls, icon, nameText, sub;
+  const now = new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+
+  if (scanned.has(bc)) {
+    cls = 'sfi-warn'; icon = '⚠'; nameText = bc; sub = 'Duplicate — already scanned this session';
+    showToast('⚠ Duplicate: ' + bc + ' already scanned this session');
+  } else if (takenBarcodes.has(bc)) {
+    cls = 'sfi-err'; icon = '✗'; nameText = bc; sub = 'Conflict — assigned to another learner!';
+    showToast('✗ Conflict: ' + bc + ' is currently assigned to someone else', 'error');
+  } else {
+    cls = 'sfi-ok'; icon = '✓'; nameText = bc; sub = l.name + ' · ' + l.cls;
+    scanned.add(bc);
+    updateScanCount();
+    showToast('✓ ' + bc + ' → ' + l.name);
+    // play beep via AudioContext
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator(); const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.frequency.value = 880; g.gain.value = 0.15;
+      osc.start(); osc.stop(ctx.currentTime + 0.08);
+    } catch {}
+  }
+
+  const feed = document.getElementById('scanFeed');
+  if (feed.querySelector('div[style]')) feed.innerHTML = '';
+  const item = document.createElement('div');
+  item.className = 'sfi ' + cls;
+  item.innerHTML = `<span class="sfi-icon" style="font-size:13px;font-weight:700;">${icon}</span><div class="sfi-info"><div class="sfi-bc">${nameText}</div><div class="sfi-sub">${sub}</div></div><span class="sfi-time">${now}</span>`;
+  item.style.animation = 'slideIn .25s ease both';
+  feed.insertBefore(item, feed.firstChild);
+  inp.value = '';
+  inp.focus();
+}
+
+function assignAll() {
+  const l = sLearners[sli];
+  const n = scanned.size;
+  showToast('✅ ' + n + ' book' + (n !== 1 ? 's' : '') + ' assigned to ' + l.name + ' — receipt created!');
+  document.getElementById('scanFeed').innerHTML = '<div style="text-align:center;font-size:13px;color:#475569;padding:20px;">Session cleared — ready for next learner</div>';
+  scanned.clear(); updateScanCount();
+  nextSLearner();
+}
+
+// USB scanner support (listens for rapid barcode input + Enter)
+let usbBuffer = '', usbTimer;
+document.addEventListener('keypress', e => {
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+  clearTimeout(usbTimer);
+  if (e.key === 'Enter' && usbBuffer.length > 2) {
+    const inp = document.getElementById('scanInput');
+    if (inp) { inp.value = usbBuffer; doScan(); }
+    usbBuffer = '';
+  } else {
+    usbBuffer += e.key;
+    usbTimer = setTimeout(() => { usbBuffer = ''; }, 80);
+  }
+});
+
+// ── Phone hero animation ────────────────────────────────────
+const phoneScans = [
+  { bc: 'BK-00047', name: 'Sipho M. · 8A', ok: true },
+  { bc: 'BK-00048', name: 'Lerato S. · 8A', ok: true },
+  { bc: 'BK-00049', name: 'Amahle Z. · 8B', ok: true },
+  { bc: 'BK-00039', name: 'Conflict!', ok: false },
+  { bc: 'BK-00050', name: 'Bongani K. · 8A', ok: true },
+];
+let psi = 0;
+setInterval(() => {
+  const s = phoneScans[psi++ % phoneScans.length];
+  const feed = document.getElementById('phoneFeed');
+  const item = document.createElement('div');
+  item.className = 'fi ' + (s.ok ? 'fi-ok' : 'fi-err');
+  item.innerHTML = `<span class="fi-icon" style="color:${s.ok ? '#16a34a' : '#dc2626'};">${s.ok ? '✓' : '✗'}</span><div><div class="fi-name" style="color:${s.ok ? '#166534' : '#991b1b'};">${s.bc}</div><div class="fi-sub">${s.name}</div></div><span class="fi-time">${new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })}</span>`;
+  feed.insertBefore(item, feed.firstChild);
+  if (feed.children.length > 3) feed.removeChild(feed.lastChild);
+}, 2600);
+
+function phoneScan(btn) {
+  btn.textContent = '⟳ Scanning…'; btn.style.opacity = '.7';
+  setTimeout(() => {
+    btn.textContent = '✓ BK-00051 scanned!'; btn.style.background = 'linear-gradient(135deg,#0891b2,#0e7490)';
+    setTimeout(() => { btn.textContent = '📷 Tap to Scan'; btn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)'; btn.style.opacity = '1'; }, 1800);
+  }, 900);
+}
+
+// ── Demo WhatsApp button ────────────────────────────────────
+function sendWADemo() {
+  showToast('📱 WhatsApp notice sent to parent: "Sipho M. — R245 due for damaged book"');
+}
+
+// ── Audit modal ─────────────────────────────────────────────
+function runAudit() {
+  document.getElementById('auditResult').style.display = 'none';
+  document.getElementById('auditProg').style.display = 'block';
+  document.getElementById('auditBar').style.width = '0%';
+  document.getElementById('auditMsg').textContent = 'Starting audit…';
+  document.getElementById('auditOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const steps = [
+    [12, '58 / 480 books checked'],
+    [28, '134 / 480 books checked'],
+    [47, '226 / 480 books checked'],
+    [63, '302 / 480 books checked'],
+    [79, '379 / 480 books checked'],
+    [94, '451 / 480 books checked'],
+    [100, '480 / 480 — Audit complete!']
+  ];
+  let i = 0;
+  const t = setInterval(() => {
+    if (i >= steps.length) {
+      clearInterval(t);
+      setTimeout(() => {
+        document.getElementById('auditProg').style.display = 'none';
+        document.getElementById('auditResult').style.display = 'block';
+      }, 400);
+      return;
+    }
+    document.getElementById('auditBar').style.width = steps[i][0] + '%';
+    document.getElementById('auditMsg').textContent = steps[i][1];
+    i++;
+  }, 500);
+}
+</script>
+</body>
+</html>
